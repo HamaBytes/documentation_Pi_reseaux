@@ -7,7 +7,6 @@ import VLSM from './pages/VLSM'
 import Configurations from './pages/Configurations'
 import Protocols from './pages/Protocols'
 import Tests from './pages/Tests'
-import Checklist from './pages/Checklist'
 import CommandReference from './pages/CommandReference'
 import PCsAndServers from './pages/PCsAndServers'
 
@@ -30,8 +29,8 @@ function App() {
     setDarkMode(!darkMode)
   }
 
-  // Base path pour GitHub Pages
-  const basename = import.meta.env.PROD ? '/doc' : ''
+  // Base path pour GitHub Pages (doit correspondre à Vite)
+  const basename = import.meta.env.PROD ? '/doc/' : '/'
 
   // S'assurer qu'on charge l'accueil par défaut
   useEffect(() => {
@@ -52,7 +51,6 @@ function App() {
           <Route path="/configurations" element={<Configurations />} />
           <Route path="/protocols" element={<Protocols />} />
           <Route path="/tests" element={<Tests />} />
-          <Route path="/checklist" element={<Checklist />} />
           <Route path="/commands" element={<CommandReference />} />
           <Route path="/pcs-servers" element={<PCsAndServers />} />
           {/* Route catch-all pour rediriger vers l'accueil */}

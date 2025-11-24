@@ -7,7 +7,6 @@ import {
   Settings, 
   BookOpen, 
   TestTube, 
-  CheckSquare, 
   Terminal,
   Monitor,
   Menu,
@@ -27,12 +26,20 @@ const Layout = ({ children, darkMode, toggleDarkMode }) => {
     { path: '/configurations', icon: Settings, label: 'Configurations' },
     { path: '/protocols', icon: BookOpen, label: 'Protocoles' },
     { path: '/tests', icon: TestTube, label: 'Tests & Validation' },
-    { path: '/checklist', icon: CheckSquare, label: 'Checklist (60 items)' },
     { path: '/commands', icon: Terminal, label: 'Référence Commandes' },
     { path: '/pcs-servers', icon: Monitor, label: 'PCs & Serveurs' }
   ]
 
-  const isActive = (path) => location.pathname === path
+  const basePath = (import.meta.env.BASE_URL || '/').replace(/\/$/, '')
+
+  const normalizePath = (pathname) => {
+    if (!basePath) return pathname || '/'
+    if (!pathname.startsWith(basePath)) return pathname || '/'
+    const trimmed = pathname.slice(basePath.length)
+    return trimmed === '' ? '/' : trimmed
+  }
+
+  const isActive = (path) => normalizePath(location.pathname) === path
 
   return (
     <div className="min-h-screen bg-gray-50 dark:bg-gray-900 transition-colors">

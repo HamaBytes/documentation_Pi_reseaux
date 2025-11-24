@@ -4,6 +4,16 @@ import { departmentsPCs, serverCommands, pcCommands, routerVerificationCommands 
 import CodeBlock from '../components/CodeBlock'
 import SortableTable from '../components/SortableTable'
 
+const getNetworkBase = (network) => {
+  if (!network) return ''
+  const [address] = network.split('/')
+  const octets = address.split('.')
+  if (octets.length >= 3) {
+    return `${octets[0]}.${octets[1]}.${octets[2]}`
+  }
+  return address
+}
+
 const PCsAndServers = () => {
   const [selectedDept, setSelectedDept] = useState(null)
   const [activeTab, setActiveTab] = useState('server') // server, pc, router
@@ -234,7 +244,7 @@ const PCsAndServers = () => {
                       <div>
                         <h4 className="font-semibold text-gray-900 dark:text-white mb-2">Configuration de Base (DHCP)</h4>
                         <CodeBlock
-                          code={pcCommands.basic.replace('192.168.X', selectedDept.network.split('/')[0])}
+                          code={pcCommands.basic.replace('192.168.X', getNetworkBase(selectedDept.network))}
                           language="text"
                         />
                       </div>

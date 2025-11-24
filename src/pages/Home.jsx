@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom'
-import { Network, Calculator, Settings, BookOpen, TestTube, CheckSquare, Terminal, Monitor, ArrowRight } from 'lucide-react'
+import { Network, Calculator, Settings, BookOpen, TestTube, Terminal, Monitor, ArrowRight } from 'lucide-react'
 import { departments, totalEmployees } from '../data/networkData'
 
 const Home = () => {
@@ -9,7 +9,6 @@ const Home = () => {
     { icon: Settings, title: 'Configurations', description: 'Configurations complètes de tous les routeurs', path: '/configurations' },
     { icon: BookOpen, title: 'Protocoles', description: 'OSPF, DHCP, NAT et routage statique', path: '/protocols' },
     { icon: TestTube, title: 'Tests & Validation', description: 'Procédures de test et validation', path: '/tests' },
-    { icon: CheckSquare, title: 'Checklist', description: '60 items de validation avec suivi', path: '/checklist' },
     { icon: Terminal, title: 'Référence Commandes', description: 'Toutes les commandes Cisco documentées', path: '/commands' },
     { icon: Monitor, title: 'PCs & Serveurs', description: 'Configurations complètes des PCs et serveurs', path: '/pcs-servers' }
   ]
@@ -26,7 +25,7 @@ const Home = () => {
       </div>
 
       {/* Quick Stats */}
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
         <div className="bg-white dark:bg-gray-800 rounded-lg p-6 border border-gray-200 dark:border-gray-700">
           <div className="text-3xl font-bold text-primary-600 dark:text-primary-400">{totalEmployees.toLocaleString()}</div>
           <div className="text-sm text-gray-600 dark:text-gray-400 mt-1">Total Employés</div>
@@ -38,10 +37,6 @@ const Home = () => {
         <div className="bg-white dark:bg-gray-800 rounded-lg p-6 border border-gray-200 dark:border-gray-700">
           <div className="text-3xl font-bold text-primary-600 dark:text-primary-400">9</div>
           <div className="text-sm text-gray-600 dark:text-gray-400 mt-1">Routeurs</div>
-        </div>
-        <div className="bg-white dark:bg-gray-800 rounded-lg p-6 border border-gray-200 dark:border-gray-700">
-          <div className="text-3xl font-bold text-primary-600 dark:text-primary-400">60</div>
-          <div className="text-sm text-gray-600 dark:text-gray-400 mt-1">Items Checklist</div>
         </div>
       </div>
 
