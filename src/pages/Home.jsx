@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom'
-import { Network, Calculator, Settings, BookOpen, TestTube, CheckSquare, Terminal, ArrowRight } from 'lucide-react'
+import { Network, Calculator, Settings, BookOpen, TestTube, CheckSquare, Terminal, Monitor, ArrowRight } from 'lucide-react'
 import { departments, totalEmployees } from '../data/networkData'
 
 const Home = () => {
@@ -10,7 +10,8 @@ const Home = () => {
     { icon: BookOpen, title: 'Protocoles', description: 'OSPF, DHCP, NAT et routage statique', path: '/protocols' },
     { icon: TestTube, title: 'Tests & Validation', description: 'Procédures de test et validation', path: '/tests' },
     { icon: CheckSquare, title: 'Checklist', description: '60 items de validation avec suivi', path: '/checklist' },
-    { icon: Terminal, title: 'Référence Commandes', description: 'Toutes les commandes Cisco documentées', path: '/commands' }
+    { icon: Terminal, title: 'Référence Commandes', description: 'Toutes les commandes Cisco documentées', path: '/commands' },
+    { icon: Monitor, title: 'PCs & Serveurs', description: 'Configurations complètes des PCs et serveurs', path: '/pcs-servers' }
   ]
 
   return (

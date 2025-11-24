@@ -9,6 +9,7 @@ import {
   TestTube, 
   CheckSquare, 
   Terminal,
+  Monitor,
   Menu,
   X,
   Moon,
@@ -27,7 +28,8 @@ const Layout = ({ children, darkMode, toggleDarkMode }) => {
     { path: '/protocols', icon: BookOpen, label: 'Protocoles' },
     { path: '/tests', icon: TestTube, label: 'Tests & Validation' },
     { path: '/checklist', icon: CheckSquare, label: 'Checklist (60 items)' },
-    { path: '/commands', icon: Terminal, label: 'Référence Commandes' }
+    { path: '/commands', icon: Terminal, label: 'Référence Commandes' },
+    { path: '/pcs-servers', icon: Monitor, label: 'PCs & Serveurs' }
   ]
 
   const isActive = (path) => location.pathname === path

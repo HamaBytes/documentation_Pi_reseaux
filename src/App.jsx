@@ -9,6 +9,7 @@ import Protocols from './pages/Protocols'
 import Tests from './pages/Tests'
 import Checklist from './pages/Checklist'
 import CommandReference from './pages/CommandReference'
+import PCsAndServers from './pages/PCsAndServers'
 
 function App() {
   const [darkMode, setDarkMode] = useState(() => {
@@ -29,8 +30,11 @@ function App() {
     setDarkMode(!darkMode)
   }
 
+  // Base path pour GitHub Pages
+  const basename = import.meta.env.PROD ? '/doc' : ''
+
   return (
-    <Router>
+    <Router basename={basename}>
       <Layout darkMode={darkMode} toggleDarkMode={toggleDarkMode}>
         <Routes>
           <Route path="/" element={<Home />} />
@@ -41,6 +45,7 @@ function App() {
           <Route path="/tests" element={<Tests />} />
           <Route path="/checklist" element={<Checklist />} />
           <Route path="/commands" element={<CommandReference />} />
+          <Route path="/pcs-servers" element={<PCsAndServers />} />
         </Routes>
       </Layout>
     </Router>

@@ -2,6 +2,10 @@
 
 Site de documentation moderne et professionnel pour le projet d'infrastructure réseau TechSolutions SARL.
 
+🌐 **Version en ligne** : [Voir sur GitHub Pages](https://hamabytes.github.io/doc/)
+
+> ✅ **Configuration** : Le projet est configuré pour le dépôt `HamaBytes/doc`
+
 ## 🚀 Fonctionnalités
 
 - ✅ **Architecture Réseau Interactive** - Diagrammes SVG interactifs avec zoom et pan
@@ -11,6 +15,7 @@ Site de documentation moderne et professionnel pour le projet d'infrastructure r
 - ✅ **Tests & Validation** - Procédures de test complètes
 - ✅ **Checklist 60 Items** - Suivi de progression avec localStorage
 - ✅ **Référence Commandes** - Toutes les commandes Cisco documentées
+- ✅ **PCs & Serveurs** - Configurations complètes avec commandes de test
 - ✅ **Export PDF/ZIP** - Export checklist PDF et configurations ZIP
 - ✅ **Mode Sombre/Clair** - Toggle avec persistance
 - ✅ **Design Responsive** - Mobile, tablette, desktop
@@ -88,6 +93,7 @@ doc/
 6. **Tests** (`/tests`) - Procédures de test
 7. **Checklist** (`/checklist`) - 60 items de validation
 8. **Référence Commandes** (`/commands`) - Documentation commandes Cisco
+9. **PCs & Serveurs** (`/pcs-servers`) - Configurations complètes des PCs et serveurs par département
 
 ## 🔧 Fonctionnalités Clés
 
@@ -123,7 +129,18 @@ doc/
 - Les configurations sont exportables en format texte
 - La checklist est sauvegardée automatiquement
 
-## 🚀 Déploiement
+## 🚀 Déploiement sur GitHub Pages
+
+Voir le guide complet dans [DEPLOY.md](./DEPLOY.md)
+
+### Déploiement Rapide
+
+1. **Configurer le nom du dépôt** dans `vite.config.js` et `src/App.jsx`
+2. **Pousser le code** sur GitHub
+3. **Activer GitHub Pages** dans Settings → Pages (Source: GitHub Actions)
+4. Le site sera disponible sur `https://VOTRE-USERNAME.github.io/VOTRE-NOM-REPO/`
+
+### Build Local
 
 ```bash
 # Build pour production
