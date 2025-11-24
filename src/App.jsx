@@ -33,10 +33,19 @@ function App() {
   // Base path pour GitHub Pages
   const basename = import.meta.env.PROD ? '/doc' : ''
 
+  // S'assurer qu'on charge l'accueil par défaut
+  useEffect(() => {
+    // Si on est sur la racine, s'assurer qu'on affiche l'accueil
+    if (window.location.pathname === basename || window.location.pathname === `${basename}/`) {
+      // L'accueil est déjà la route par défaut, pas besoin de redirection
+    }
+  }, [basename])
+
   return (
     <Router basename={basename}>
       <Layout darkMode={darkMode} toggleDarkMode={toggleDarkMode}>
         <Routes>
+          <Route index element={<Home />} />
           <Route path="/" element={<Home />} />
           <Route path="/architecture" element={<Architecture />} />
           <Route path="/vlsm" element={<VLSM />} />
@@ -46,6 +55,8 @@ function App() {
           <Route path="/checklist" element={<Checklist />} />
           <Route path="/commands" element={<CommandReference />} />
           <Route path="/pcs-servers" element={<PCsAndServers />} />
+          {/* Route catch-all pour rediriger vers l'accueil */}
+          <Route path="*" element={<Home />} />
         </Routes>
       </Layout>
     </Router>

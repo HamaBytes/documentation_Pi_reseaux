@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>TechSolutions SARL - Documentation Réseau</title>
+  <script>
+    // Rediriger vers l'accueil
+    var path = window.location.pathname;
+    
+    // Si on est sur GitHub Pages avec le base path /doc/
+    if (path.startsWith('/doc')) {
+      // Si on est déjà sur /doc/, on charge index.html
+      if (path === '/doc/' || path === '/doc') {
+        window.location.replace('/doc/index.html');
+      } else {
+        // Sinon rediriger vers /doc/
+        window.location.replace('/doc/');
+      }
+    } else {
+      // Environnement local
+      window.location.replace('/');
+    }
+  </script>
+</head>
+<body>
+  <p>Redirection vers l'accueil...</p>
+  <p>Si la redirection ne fonctionne pas, <a href="/doc/">cliquez ici</a></p>
+</body>
+</html>
+
