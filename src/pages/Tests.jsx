@@ -1,7 +1,11 @@
+import React, { useState } from 'react'
 import { TestTube, CheckCircle, XCircle } from 'lucide-react'
 import CodeBlock from '../components/CodeBlock'
+import TestForm from '../components/TestForm'
+import TestList from '../components/TestList'
+import TestDetail from '../components/TestDetail'
 
-const Tests = () => {
+const Tests = () => { const [selected, setSelected] = useState(null)
   const r1Tests = `enable
 
 ! Vérifier les interfaces
@@ -116,6 +120,24 @@ save`
         <p className="text-gray-600 dark:text-gray-400">
           Procédures de test complètes pour valider la configuration du réseau
         </p>
+      </div>
+
+      <div className="mt-6">
+        <h2 className="text-xl font-semibold">Gestion des Tests</h2>
+        <p className="text-sm text-gray-600 dark:text-gray-400">Créez, joignez des preuves (screenshots) et consultez les tests enregistrés.</p>
+
+        <div className="grid md:grid-cols-3 gap-4 mt-4">
+          <div className="md:col-span-2">
+            <TestForm onSaved={(t)=>{setSelected(t); window.location.hash = '#detail'}} />
+            <div className="mt-6">
+              <TestList onSelect={(t)=>{setSelected(t); window.location.hash = '#detail'}} />
+            </div>
+          </div>
+
+          <div id="detail">
+            <TestDetail test={selected} />
+          </div>
+        </div>
       </div>
 
       {/* Test Categories */}

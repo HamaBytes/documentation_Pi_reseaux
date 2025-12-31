@@ -155,5 +155,15 @@ Projet académique - TechSolutions SARL
 
 ---
 
+## 🗄️ Supabase (Tests & Screenshots)
+
+- Create a public bucket named `image` and allow public read access.
+- The Tests UI uploads screenshots to `image/screenshots/` and stores public URLs in the `tests` table.
+- Set environment variables locally (Vite):
+  - `VITE_SUPABASE_URL` = your Supabase URL
+  - `VITE_SUPABASE_KEY` = your Supabase publishable key
+  (Or React-style `REACT_APP_SUPABASE_URL` / `REACT_APP_SUPABASE_PUBLISHABLE_DEFAULT_KEY`)
+- Run the SQL in `supabase/init.sql` in the Supabase SQL editor to create `tests`, `services`, and `servers` tables.
+
 **Bon courage pour votre validation Semaine 11 ! 🎉**
 

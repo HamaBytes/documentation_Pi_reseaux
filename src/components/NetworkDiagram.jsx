@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { ZoomIn, ZoomOut, RotateCcw } from 'lucide-react'
+import { ZoomIn, ZoomOut, RotateCcw, Router, Cloud, Monitor, Server, Globe } from 'lucide-react'
 
 const NetworkDiagram = () => {
   const [zoom, setZoom] = useState(1)
@@ -7,21 +7,42 @@ const NetworkDiagram = () => {
   const [isDragging, setIsDragging] = useState(false)
   const [dragStart, setDragStart] = useState({ x: 0, y: 0 })
   const [draggedNode, setDraggedNode] = useState(null)
+
+  // Initial positions optimized for Full Mesh + Departments
   const [nodePositions, setNodePositions] = useState({
-    'R-internet': { x: 400, y: 100 },
-    'R1-b': { x: 200, y: 250 },
-    'R2-b': { x: 200, y: 450 },
-    'R3-b': { x: 600, y: 450 },
-    'R4-b': { x: 600, y: 250 },
-    'NAT1': { x: 400, y: 30 },
-    'Cloud1': { x: 50, y: 250 },
-    'Cloud2': { x: 50, y: 450 },
-    'Cloud3': { x: 750, y: 250 },
-    'RZ-1': { x: 100, y: 600 },
-    'RZ-2': { x: 300, y: 600 },
-    'RZ-3': { x: 500, y: 600 },
-    'RZ-4': { x: 700, y: 600 }
+    'R-Internet': { x: 400, y: 80 },
+    // Backbone Ring (Outer)
+    'R1': { x: 250, y: 250 },
+    'R2': { x: 550, y: 250 },
+    'R3': { x: 550, y: 450 },
+    'R4': { x: 250, y: 450 },
+    // Departments (Below)
+    'RZ-1': { x: 150, y: 350 },  // Marketing
+    'RZ-2': { x: 400, y: 560 },  // IT
+    'RZ-3': { x: 650, y: 560 },  // DB
+    'RZ-4': { x: 150, y: 550 },  // Collab
   })
+
+  // Links definition for easier rendering
+  // Full Mesh: R1-R2, R2-R3, R3-R4, R4-R1, R1-R3, R2-R4
+  const backboneLinks = [
+    ['R1', 'R2'], ['R2', 'R3'], ['R3', 'R4'], ['R4', 'R1'], // Ring
+    ['R1', 'R3'], ['R2', 'R4'] // Cross connections for Full Mesh
+  ]
+
+  const uplinkLinks = [
+    { from: 'R-Internet', to: 'R1' },
+    { from: 'R-Internet', to: 'R2' },
+    { from: 'R-Internet', to: 'R3' },
+    { from: 'R-Internet', to: 'R4' },
+  ]
+
+  const departmentLinks = [
+    { from: 'R1', to: 'RZ-1' },
+    { from: 'R2', to: 'RZ-2' },
+    { from: 'R3', to: 'RZ-3' },
+    { from: 'R4', to: 'RZ-4' },
+  ]
 
   const handleZoomIn = () => setZoom(Math.min(zoom + 0.1, 2))
   const handleZoomOut = () => setZoom(Math.max(zoom - 0.1, 0.5))
@@ -29,26 +50,21 @@ const NetworkDiagram = () => {
     setZoom(1)
     setPan({ x: 0, y: 0 })
     setNodePositions({
-      'R-internet': { x: 400, y: 100 },
-      'R1-b': { x: 200, y: 250 },
-      'R2-b': { x: 200, y: 450 },
-      'R3-b': { x: 600, y: 450 },
-      'R4-b': { x: 600, y: 250 },
-      'NAT1': { x: 400, y: 30 },
-      'Cloud1': { x: 50, y: 250 },
-      'Cloud2': { x: 50, y: 450 },
-      'Cloud3': { x: 750, y: 250 },
-      'RZ-1': { x: 100, y: 600 },
-      'RZ-2': { x: 300, y: 600 },
-      'RZ-3': { x: 500, y: 600 },
-      'RZ-4': { x: 700, y: 600 }
+      'R-Internet': { x: 400, y: 80 },
+      'R1': { x: 250, y: 250 },
+      'R2': { x: 550, y: 250 },
+      'R3': { x: 550, y: 450 },
+      'R4': { x: 250, y: 450 },
+      'RZ-1': { x: 150, y: 350 },
+      'RZ-2': { x: 400, y: 560 },
+      'RZ-3': { x: 650, y: 560 },
+      'RZ-4': { x: 150, y: 550 },
     })
   }
 
   const handleMouseDown = (e) => {
-    // Vérifier si on clique sur un nœud (circle ou ellipse)
-    const nodeName = e.target.getAttribute('data-node')
-    if (nodeName && (e.target.tagName === 'circle' || e.target.tagName === 'ellipse')) {
+    const nodeName = e.target.getAttribute('data-node') || e.target.parentNode.getAttribute('data-node')
+    if (nodeName) {
       setDraggedNode(nodeName)
       const rect = e.currentTarget.getBoundingClientRect()
       const svgPoint = {
@@ -60,7 +76,6 @@ const NetworkDiagram = () => {
       e.stopPropagation()
       return
     }
-    // Pan du canvas si on ne clique pas sur un nœud
     setIsDragging(true)
     setDragStart({ x: e.clientX - pan.x, y: e.clientY - pan.y })
   }
@@ -74,10 +89,7 @@ const NetworkDiagram = () => {
       }
       setNodePositions(prev => ({
         ...prev,
-        [draggedNode]: {
-          x: svgPoint.x,
-          y: svgPoint.y
-        }
+        [draggedNode]: { x: svgPoint.x, y: svgPoint.y }
       }))
     } else if (isDragging && !draggedNode) {
       setPan({
@@ -93,271 +105,162 @@ const NetworkDiagram = () => {
   }
 
   return (
-    <div className="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 p-4">
-      {/* Controls */}
-      <div className="flex items-center justify-between mb-4">
-        <h3 className="text-lg font-semibold text-gray-900 dark:text-white">
-          Topologie Réseau Interactive
-        </h3>
-        <div className="flex items-center space-x-2">
-          <button
-            onClick={handleZoomOut}
-            className="p-2 rounded-lg bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-600"
-          >
+    <div className="bg-white dark:bg-surface-800 rounded-xl border border-surface-200 dark:border-surface-700 p-6 shadow-sm transition-all duration-300">
+
+      <div className="flex items-center justify-between mb-6">
+        <div>
+          <h3 className="text-xl font-bold text-surface-900 dark:text-white flex items-center gap-2">
+            <Globe className="w-5 h-5 text-primary-500" />
+            Network Topology
+          </h3>
+          <p className="text-sm text-surface-500 dark:text-surface-400">Interactive Full Mesh Backbone & Departmental Links</p>
+        </div>
+
+        <div className="flex items-center gap-1 bg-surface-100 dark:bg-surface-700 p-1 rounded-lg border border-surface-200 dark:border-surface-600">
+          <button onClick={handleZoomOut} className="p-2 rounded-md hover:bg-white dark:hover:bg-surface-600 hover:shadow-sm text-surface-600 dark:text-surface-300 transition-all">
             <ZoomOut className="w-4 h-4" />
           </button>
-          <span className="text-sm text-gray-600 dark:text-gray-400 min-w-[60px] text-center">
+          <span className="text-xs font-mono font-medium text-surface-600 dark:text-surface-300 w-12 text-center">
             {Math.round(zoom * 100)}%
           </span>
-          <button
-            onClick={handleZoomIn}
-            className="p-2 rounded-lg bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-600"
-          >
+          <button onClick={handleZoomIn} className="p-2 rounded-md hover:bg-white dark:hover:bg-surface-600 hover:shadow-sm text-surface-600 dark:text-surface-300 transition-all">
             <ZoomIn className="w-4 h-4" />
           </button>
-          <button
-            onClick={handleReset}
-            className="p-2 rounded-lg bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-600"
-          >
+          <div className="w-px h-4 bg-surface-300 dark:bg-surface-600 mx-1"></div>
+          <button onClick={handleReset} className="p-2 rounded-md hover:bg-white dark:hover:bg-surface-600 hover:shadow-sm text-surface-600 dark:text-surface-300 transition-all">
             <RotateCcw className="w-4 h-4" />
           </button>
         </div>
       </div>
 
-      {/* SVG Diagram */}
       <div
-        className="overflow-auto border border-gray-200 dark:border-gray-700 rounded-lg bg-gray-50 dark:bg-gray-900"
+        className="overflow-hidden border border-surface-200 dark:border-surface-700 rounded-xl bg-surface-50 dark:bg-surface-900 relative shadow-inner cursor-move group"
         style={{ height: '600px' }}
         onMouseDown={handleMouseDown}
         onMouseMove={handleMouseMove}
         onMouseUp={handleMouseUp}
         onMouseLeave={handleMouseUp}
       >
+        <div className="absolute inset-0 opacity-5 pointer-events-none"
+          style={{ backgroundImage: 'radial-gradient(circle, #6366f1 1px, transparent 1px)', backgroundSize: '20px 20px' }}></div>
+
         <svg
-          width="800"
-          height="650"
+          width="100%"
+          height="100%"
           viewBox="0 0 800 650"
           style={{
             transform: `translate(${pan.x}px, ${pan.y}px) scale(${zoom})`,
-            transformOrigin: '0 0'
+            transformOrigin: '0 0',
+            transition: isDragging ? 'none' : 'transform 0.1s ease-out'
           }}
-          className="cursor-move"
         >
-          {/* Backbone links - Topologie en pentagone */}
-          {/* R-internet vers R1-b, R2-b, R3-b, R4-b */}
-          <line x1={nodePositions['R-internet'].x} y1={nodePositions['R-internet'].y} 
-                x2={nodePositions['R1-b'].x} y2={nodePositions['R1-b'].y} 
-                stroke="#ef4444" strokeWidth="2" />
-          <line x1={nodePositions['R-internet'].x} y1={nodePositions['R-internet'].y} 
-                x2={nodePositions['R2-b'].x} y2={nodePositions['R2-b'].y} 
-                stroke="#ef4444" strokeWidth="2" />
-          <line x1={nodePositions['R-internet'].x} y1={nodePositions['R-internet'].y} 
-                x2={nodePositions['R3-b'].x} y2={nodePositions['R3-b'].y} 
-                stroke="#ef4444" strokeWidth="2" />
-          <line x1={nodePositions['R-internet'].x} y1={nodePositions['R-internet'].y} 
-                x2={nodePositions['R4-b'].x} y2={nodePositions['R4-b'].y} 
-                stroke="#ef4444" strokeWidth="2" />
-          
-          {/* Pentagone entre R1-b, R2-b, R3-b, R4-b (lignes ondulées) */}
-          <line x1={nodePositions['R1-b'].x} y1={nodePositions['R1-b'].y} 
-                x2={nodePositions['R2-b'].x} y2={nodePositions['R2-b'].y} 
-                stroke="#3b82f6" strokeWidth="2" strokeDasharray="3,3" />
-          <line x1={nodePositions['R2-b'].x} y1={nodePositions['R2-b'].y} 
-                x2={nodePositions['R3-b'].x} y2={nodePositions['R3-b'].y} 
-                stroke="#3b82f6" strokeWidth="2" strokeDasharray="3,3" />
-          <line x1={nodePositions['R3-b'].x} y1={nodePositions['R3-b'].y} 
-                x2={nodePositions['R4-b'].x} y2={nodePositions['R4-b'].y} 
-                stroke="#3b82f6" strokeWidth="2" strokeDasharray="3,3" />
-          <line x1={nodePositions['R4-b'].x} y1={nodePositions['R4-b'].y} 
-                x2={nodePositions['R1-b'].x} y2={nodePositions['R1-b'].y} 
-                stroke="#3b82f6" strokeWidth="2" strokeDasharray="3,3" />
-          
-          {/* R1-b vers R3-b (diagonale) */}
-          <line x1={nodePositions['R1-b'].x} y1={nodePositions['R1-b'].y} 
-                x2={nodePositions['R3-b'].x} y2={nodePositions['R3-b'].y} 
-                stroke="#3b82f6" strokeWidth="2" strokeDasharray="3,3" />
-          
-          {/* R-internet vers NAT1 */}
-          <line x1={nodePositions['R-internet'].x} y1={nodePositions['R-internet'].y} 
-                x2={nodePositions['NAT1'].x} y2={nodePositions['NAT1'].y} 
-                stroke="#000000" strokeWidth="2" />
-          
-          {/* Clouds vers routeurs */}
-          <line x1={nodePositions['Cloud1'].x} y1={nodePositions['Cloud1'].y} 
-                x2={nodePositions['R1-b'].x} y2={nodePositions['R1-b'].y} 
-                stroke="#000000" strokeWidth="2" />
-          <line x1={nodePositions['Cloud2'].x} y1={nodePositions['Cloud2'].y} 
-                x2={nodePositions['R2-b'].x} y2={nodePositions['R2-b'].y} 
-                stroke="#000000" strokeWidth="2" />
-          <line x1={nodePositions['Cloud3'].x} y1={nodePositions['Cloud3'].y} 
-                x2={nodePositions['R4-b'].x} y2={nodePositions['R4-b'].y} 
-                stroke="#000000" strokeWidth="2" />
+          <defs>
+            <filter id="glow" x="-20%" y="-20%" width="140%" height="140%">
+              <feGaussianBlur stdDeviation="3" result="blur" />
+              <feComposite in="SourceGraphic" in2="blur" operator="over" />
+            </filter>
+            <marker id="arrow" markerWidth="10" markerHeight="10" refX="25" refY="3" orient="auto" markerUnits="strokeWidth">
+              <path d="M0,0 L0,6 L9,3 z" fill="#94a3b8" />
+            </marker>
+          </defs>
 
-          {/* Department links - RZ vers Backbone */}
-          <line x1={nodePositions['R1-b'].x} y1={nodePositions['R1-b'].y} 
-                x2={nodePositions['RZ-1'].x} y2={nodePositions['RZ-1'].y} 
-                stroke="#10b981" strokeWidth="2" />
-          <line x1={nodePositions['R2-b'].x} y1={nodePositions['R2-b'].y} 
-                x2={nodePositions['RZ-2'].x} y2={nodePositions['RZ-2'].y} 
-                stroke="#10b981" strokeWidth="2" />
-          <line x1={nodePositions['R3-b'].x} y1={nodePositions['R3-b'].y} 
-                x2={nodePositions['RZ-3'].x} y2={nodePositions['RZ-3'].y} 
-                stroke="#10b981" strokeWidth="2" />
-          <line x1={nodePositions['R4-b'].x} y1={nodePositions['R4-b'].y} 
-                x2={nodePositions['RZ-4'].x} y2={nodePositions['RZ-4'].y} 
-                stroke="#10b981" strokeWidth="2" />
+          {/* Links */}
+          {/* Uplinks (Red) */}
+          {uplinkLinks.map((link, i) => (
+            <line key={`up-${i}`}
+              x1={nodePositions[link.from].x} y1={nodePositions[link.from].y}
+              x2={nodePositions[link.to].x} y2={nodePositions[link.to].y}
+              stroke="#ef4444" strokeWidth="2" strokeOpacity="0.6" strokeDasharray="5,5"
+            />
+          ))}
 
-          {/* Routers - Draggable */}
+          {/* Backbone Mesh (Blue) */}
+          {backboneLinks.map(([n1, n2], i) => (
+            <line key={`bb-${i}`}
+              x1={nodePositions[n1].x} y1={nodePositions[n1].y}
+              x2={nodePositions[n2].x} y2={nodePositions[n2].y}
+              stroke="#6366f1" strokeWidth="3" strokeOpacity="0.8"
+            />
+          ))}
+
+          {/* Department Links (Green) */}
+          {departmentLinks.map((link, i) => (
+            <line key={`dept-${i}`}
+              x1={nodePositions[link.from].x} y1={nodePositions[link.from].y}
+              x2={nodePositions[link.to].x} y2={nodePositions[link.to].y}
+              stroke="#10b981" strokeWidth="2"
+            />
+          ))}
+
+          {/* Nodes */}
           {Object.entries(nodePositions).map(([name, pos]) => {
-            const isBackbone = name.includes('-b')
-            const isInternet = name === 'R-internet'
-            const isCloud = name.startsWith('Cloud') || name === 'NAT1'
-            const isRZ = name.startsWith('RZ')
-            
-            let fill, icon, routerType
-            if (isInternet) {
-              fill = '#ef4444'
-              icon = 'router'
-              routerType = 'c7200'
-            } else if (isBackbone) {
-              fill = '#3b82f6'
-              icon = 'router'
-              routerType = 'c7200'
-            } else if (isCloud) {
-              fill = '#60a5fa'
-              icon = 'cloud'
-              routerType = null
-            } else if (isRZ) {
-              fill = '#10b981'
-              icon = 'router'
-              routerType = 'c3745'
-            } else {
-              fill = '#94a3b8'
-              icon = 'device'
-              routerType = null
-            }
-            
+            const isInternet = name === 'R-Internet'
+            const isBackbone = ['R1', 'R2', 'R3', 'R4'].includes(name)
+
+            let fillColor = isInternet ? '#ef4444' : isBackbone ? '#6366f1' : '#10b981'
+            let RouterIcon = isInternet ? Globe : Router
+
             return (
-              <g key={name}>
-                {icon === 'cloud' ? (
-                  <ellipse
-                    cx={pos.x}
-                    cy={pos.y}
-                    rx="25"
-                    ry="15"
-                    fill={fill}
-                    stroke="#fff"
-                    strokeWidth="2"
-                    className="cursor-move hover:opacity-80"
-                    data-node={name}
-                  />
-                ) : (
-                  <circle
-                    cx={pos.x}
-                    cy={pos.y}
-                    r="20"
-                    fill={fill}
-                    stroke="#fff"
-                    strokeWidth="2"
-                    className="cursor-move hover:opacity-80"
-                    data-node={name}
-                  />
-                )}
-                <text
-                  x={pos.x}
-                  y={pos.y + (icon === 'cloud' ? 30 : 40)}
-                  textAnchor="middle"
-                  className="text-xs fill-gray-900 dark:fill-gray-100 font-medium pointer-events-none"
-                >
+              <g key={name} transform={`translate(${pos.x}, ${pos.y})`} className="cursor-pointer hover:opacity-90 transition-opacity" data-node={name}>
+                {/* Node Glow */}
+                <circle r="25" fill={fillColor} fillOpacity="0.15" className="animate-pulse-slow" />
+
+                {/* Node Shape */}
+                <circle r="18" fill={fillColor} stroke="white" strokeWidth="2" className="shadow-lg drop-shadow-md" />
+
+                {/* Avoid Lucide dependency inside SVG by simple text/emoji or path fallback if needed, 
+                    but pure SVG icons are cleaner. Ideally we map icons to simple SVG paths here.
+                    For simplicity in this robust implementation, we stick to shapes + labels or generic paths. 
+                */}
+
+                {/* Simple Router Icon Path */}
+                <path d="M-8,-4 h16 v8 h-16 z M-5,4 v2 M0,4 v2 M5,4 v2" stroke="white" strokeWidth="1.5" fill="none" transform="translate(0,-1) scale(0.8)" />
+
+                {/* Label */}
+                <text y="35" textAnchor="middle" className="text-xs font-bold fill-surface-700 dark:fill-surface-200 pointer-events-none select-none" style={{ textShadow: '0 1px 2px rgba(0,0,0,0.1)' }}>
                   {name}
                 </text>
-                {routerType && (
-                  <text
-                    x={pos.x}
-                    y={pos.y + (icon === 'cloud' ? 45 : 55)}
-                    textAnchor="middle"
-                    className="text-[10px] fill-gray-600 dark:fill-gray-400 font-mono pointer-events-none"
-                  >
-                    {routerType}
-                  </text>
-                )}
+
+                <text y="48" textAnchor="middle" className="text-[9px] font-mono fill-surface-500 dark:fill-surface-400 pointer-events-none select-none uppercase tracking-wider">
+                  {isInternet ? 'ISP Gateway' : isBackbone ? 'C7200 Core' : 'C3745 Edge'}
+                </text>
               </g>
             )
           })}
         </svg>
+
+        {/* Floating Controls / Legend Overlay could go here */}
       </div>
 
-      {/* Legend */}
-      <div className="mt-4 space-y-4">
-        <div className="flex flex-wrap items-center gap-4 text-sm">
-          <div className="flex items-center space-x-2">
-            <div className="w-4 h-4 rounded-full bg-red-500"></div>
-            <span className="text-gray-700 dark:text-gray-300">R-internet (c7200)</span>
+      <div className="mt-6 grid grid-cols-1 md:grid-cols-3 gap-4">
+        <div className="bg-surface-50 dark:bg-surface-900/50 p-4 rounded-lg border border-surface-100 dark:border-surface-700">
+          <div className="flex items-center gap-3 mb-2">
+            <div className="w-3 h-3 rounded-full bg-primary-500"></div>
+            <span className="font-semibold text-sm text-surface-700 dark:text-surface-200">Backbone Core</span>
           </div>
-          <div className="flex items-center space-x-2">
-            <div className="w-4 h-4 rounded-full bg-blue-500"></div>
-            <span className="text-gray-700 dark:text-gray-300">Backbone (R1-b à R4-b, c7200)</span>
-          </div>
-          <div className="flex items-center space-x-2">
-            <div className="w-4 h-4 rounded-full bg-sky-400"></div>
-            <span className="text-gray-700 dark:text-gray-300">Clouds & NAT</span>
-          </div>
-          <div className="flex items-center space-x-2">
-            <div className="w-4 h-4 rounded-full bg-green-500"></div>
-            <span className="text-gray-700 dark:text-gray-300">Départements (RZ1-RZ4, c3745)</span>
-          </div>
-          <div className="flex items-center space-x-2">
-            <div className="w-4 h-1 bg-red-500"></div>
-            <span className="text-gray-700 dark:text-gray-300">Liaisons R-internet</span>
-          </div>
-          <div className="flex items-center space-x-2">
-            <div className="w-4 h-1 bg-blue-500 border-dashed"></div>
-            <span className="text-gray-700 dark:text-gray-300">Liaisons Backbone (Serial)</span>
-          </div>
-          <div className="flex items-center space-x-2">
-            <div className="w-4 h-1 bg-black"></div>
-            <span className="text-gray-700 dark:text-gray-300">Liaisons Clouds</span>
-          </div>
+          <p className="text-xs text-surface-500 dark:text-surface-400">
+            Full-mesh topology utilizing high-performance <strong>Cisco 7200</strong> routers. Supports heavy inter-departmental traffic and redundancy.
+          </p>
         </div>
-        
-        {/* Explications choix routeurs */}
-        <div className="bg-blue-50 dark:bg-blue-900 rounded-lg p-4 border border-blue-200 dark:border-blue-800">
-          <h4 className="font-semibold text-blue-900 dark:text-blue-100 mb-3">Justification du Choix des Routeurs</h4>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
-            <div>
-              <h5 className="font-semibold text-blue-800 dark:text-blue-200 mb-2 flex items-center">
-                <span className="w-3 h-3 rounded-full bg-blue-500 mr-2"></span>
-                Routeurs Backbone : Cisco 7200 (c7200)
-              </h5>
-              <ul className="list-disc list-inside space-y-1 text-blue-700 dark:text-blue-300 ml-4">
-                <li><strong>Performance élevée</strong> : Capacité de traitement importante pour gérer le trafic inter-départements</li>
-                <li><strong>Interfaces multiples</strong> : Support de nombreuses interfaces Serial pour le maillage OSPF</li>
-                <li><strong>Scalabilité</strong> : Peut gérer de grandes tables de routage OSPF</li>
-                <li><strong>Fiabilité</strong> : Architecture robuste pour le backbone critique</li>
-                <li><strong>Support OSPF avancé</strong> : Optimisé pour les protocoles de routage complexes</li>
-                <li><strong>NAT performant</strong> : Capacité de traduction d'adresses à haut débit</li>
-              </ul>
-            </div>
-            <div>
-              <h5 className="font-semibold text-green-800 dark:text-green-200 mb-2 flex items-center">
-                <span className="w-3 h-3 rounded-full bg-green-500 mr-2"></span>
-                Routeurs Départementaux : Cisco 3745 (c3745)
-              </h5>
-              <ul className="list-disc list-inside space-y-1 text-green-700 dark:text-green-300 ml-4">
-                <li><strong>Coût optimisé</strong> : Solution économique pour les besoins départementaux</li>
-                <li><strong>Suffisant pour LAN</strong> : Capacité adaptée au trafic local (7170 à 112 employés)</li>
-                <li><strong>DHCP intégré</strong> : Support natif du serveur DHCP pour les PCs</li>
-                <li><strong>Simplicité</strong> : Configuration plus simple que les routeurs backbone</li>
-                <li><strong>Maintenance facilitée</strong> : Moins de complexité pour les équipes IT locales</li>
-                <li><strong>Routage statique</strong> : Suffisant pour les besoins de routage départemental</li>
-              </ul>
-            </div>
+
+        <div className="bg-surface-50 dark:bg-surface-900/50 p-4 rounded-lg border border-surface-100 dark:border-surface-700">
+          <div className="flex items-center gap-3 mb-2">
+            <div className="w-3 h-3 rounded-full bg-emerald-500"></div>
+            <span className="font-semibold text-sm text-surface-700 dark:text-surface-200">Department Edge</span>
           </div>
-          <div className="mt-4 p-3 bg-white dark:bg-gray-800 rounded border border-blue-200 dark:border-blue-700">
-            <p className="text-sm text-gray-700 dark:text-gray-300">
-              <strong>Note :</strong> Les nœuds du diagramme sont <strong>déplaçables</strong> ! Cliquez et glissez-les pour réorganiser la topologie selon vos besoins.
-            </p>
+          <p className="text-xs text-surface-500 dark:text-surface-400">
+            <strong>Cisco 3745</strong> ISR routers providing local LAN services, NAT, and DHCP. Connected via GigabitEthernet to Core.
+          </p>
+        </div>
+
+        <div className="bg-surface-50 dark:bg-surface-900/50 p-4 rounded-lg border border-surface-100 dark:border-surface-700">
+          <div className="flex items-center gap-3 mb-2">
+            <div className="w-3 h-3 rounded-full bg-red-500"></div>
+            <span className="font-semibold text-sm text-surface-700 dark:text-surface-200">Internet Gateway</span>
           </div>
+          <p className="text-xs text-surface-500 dark:text-surface-400">
+            WAN connectivity point. Simulates ISP connection via Frame Relay or Serial Hols for external access.
+          </p>
         </div>
       </div>
     </div>
