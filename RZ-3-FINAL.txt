@@ -1,0 +1,81 @@
+!========================================
+! RZ-3 - CONFIGURATION COMPLETE
+! Departement Base de donnees
+! Copy-Paste Ready for GNS3
+!========================================
+
+enable
+configure terminal
+hostname RZ-3
+
+!========================================
+! INTERFACE VERS BACKBONE (OUTSIDE)
+!========================================
+interface FastEthernet0/0
+ description Liaison vers R3-Backbone
+ ip address 41.16.2.10 255.255.255.252
+ ip nat outside
+ no shutdown
+ exit
+
+!========================================
+! INTERFACE LAN DEPARTEMENT (INSIDE)
+!========================================
+interface FastEthernet0/1
+ description LAN Base de donnees - DHCP actif
+ ip address 192.168.32.1 255.255.248.0
+ ip nat inside
+ no shutdown
+ exit
+
+!========================================
+! CONFIGURATION DHCP
+!========================================
+
+! Exclusions d'adresses
+ip dhcp excluded-address 192.168.32.1 192.168.32.50
+ip dhcp excluded-address 192.168.39.250 192.168.39.255
+
+! Pool DHCP
+ip dhcp pool BASE-DONNEES
+ network 192.168.32.0 255.255.248.0
+ default-router 192.168.32.1
+ dns-server 8.8.8.8 8.8.4.4
+ domain-name db.techsolutions.local
+ lease 7
+ exit
+
+!========================================
+! CONFIGURATION NAT/PAT
+!========================================
+
+! ACL pour identifier le trafic interne
+access-list 1 permit 192.168.32.0 0.0.7.255
+
+! NAT Overload (PAT) sur l'interface vers le backbone
+ip nat inside source list 1 interface FastEthernet0/0 overload
+
+!========================================
+! ROUTES STATIQUES
+!========================================
+
+! Route par defaut vers R3-Backbone
+ip route 0.0.0.0 0.0.0.0 41.16.2.9
+
+!========================================
+! SAUVEGARDE
+!========================================
+end
+write memory
+
+!========================================
+! VERIFICATION
+!========================================
+! Commandes de verification:
+! show ip interface brief
+! show ip dhcp binding
+! show ip dhcp pool
+! show ip nat translations
+! show ip route
+! ping 41.16.2.9 (R3-Backbone)
+! ping 8.8.8.8 (test Internet)

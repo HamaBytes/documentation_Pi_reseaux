@@ -1,0 +1,81 @@
+!========================================
+! RZ-1 - CONFIGURATION COMPLETE
+! Departement Web/Marketing
+! Copy-Paste Ready for GNS3
+!========================================
+
+enable
+configure terminal
+hostname RZ-1
+
+!========================================
+! INTERFACE VERS BACKBONE (OUTSIDE)
+!========================================
+interface FastEthernet0/0
+ description Liaison vers R1-Backbone
+ ip address 41.16.2.2 255.255.255.252
+ ip nat outside
+ no shutdown
+ exit
+
+!========================================
+! INTERFACE LAN DEPARTEMENT (INSIDE)
+!========================================
+interface FastEthernet0/1
+ description LAN Web/Marketing - DHCP actif
+ ip address 192.168.0.1 255.255.224.0
+ ip nat inside
+ no shutdown
+ exit
+
+!========================================
+! CONFIGURATION DHCP
+!========================================
+
+! Exclusions d'adresses
+ip dhcp excluded-address 192.168.0.1 192.168.0.50
+ip dhcp excluded-address 192.168.31.250 192.168.31.255
+
+! Pool DHCP
+ip dhcp pool WEB-MARKETING
+ network 192.168.0.0 255.255.224.0
+ default-router 192.168.0.1
+ dns-server 8.8.8.8 8.8.4.4
+ domain-name web.techsolutions.local
+ lease 7
+ exit
+
+!========================================
+! CONFIGURATION NAT/PAT
+!========================================
+
+! ACL pour identifier le trafic interne
+access-list 1 permit 192.168.0.0 0.0.31.255
+
+! NAT Overload (PAT) sur l'interface vers le backbone
+ip nat inside source list 1 interface FastEthernet0/0 overload
+
+!========================================
+! ROUTES STATIQUES
+!========================================
+
+! Route par defaut vers R1-Backbone
+ip route 0.0.0.0 0.0.0.0 41.16.2.1
+
+!========================================
+! SAUVEGARDE
+!========================================
+end
+write memory
+
+!========================================
+! VERIFICATION
+!========================================
+! Commandes de verification:
+! show ip interface brief
+! show ip dhcp binding
+! show ip dhcp pool
+! show ip nat translations
+! show ip route
+! ping 41.16.2.1 (R1-Backbone)
+! ping 8.8.8.8 (test Internet)

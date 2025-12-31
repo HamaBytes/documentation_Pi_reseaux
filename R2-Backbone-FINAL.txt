@@ -1,0 +1,94 @@
+!========================================
+! R2-BACKBONE - CONFIGURATION COMPLETE
+! Copy-Paste Ready for GNS3
+!========================================
+
+enable
+configure terminal
+hostname R2-Backbone
+
+!========================================
+! INTERFACES SERIAL BACKBONE
+!========================================
+
+interface Serial1/0
+ description Liaison vers R1-Backbone
+ ip address 41.16.1.2 255.255.255.252
+ encapsulation ppp
+ no shutdown
+ exit
+
+interface Serial1/1
+ description Liaison vers R3-Backbone
+ ip address 41.16.1.13 255.255.255.252
+ encapsulation ppp
+ no shutdown
+ exit
+
+interface Serial1/2
+ description Liaison vers R4-Backbone
+ ip address 41.16.1.17 255.255.255.252
+ encapsulation ppp
+ no shutdown
+ exit
+
+interface Serial1/3
+ description Liaison vers R-Internet
+ ip address 41.16.1.30 255.255.255.252
+ encapsulation ppp
+ no shutdown
+ exit
+
+!========================================
+! INTERFACE VERS DEPARTEMENT RZ-2
+!========================================
+interface FastEthernet0/0
+ description Liaison vers RZ-2 (Supervision/IT)
+ ip address 41.16.2.5 255.255.255.252
+ no shutdown
+ exit
+
+!========================================
+! CONFIGURATION OSPF
+!========================================
+router ospf 1
+ router-id 2.2.2.2
+ log-adjacency-changes
+ passive-interface FastEthernet0/0
+ network 41.16.1.0 0.0.0.3 area 0
+ network 41.16.1.12 0.0.0.3 area 0
+ network 41.16.1.16 0.0.0.3 area 0
+ network 41.16.1.28 0.0.0.3 area 0
+ network 41.16.2.4 0.0.0.3 area 0
+ default-information originate
+ exit
+
+!========================================
+! ROUTES STATIQUES
+!========================================
+
+! Route par defaut vers R-Internet
+ip route 0.0.0.0 0.0.0.0 41.16.1.29
+
+! Route vers reseau departemental RZ-2
+ip route 192.168.40.0 255.255.252.0 41.16.2.6
+
+!========================================
+! SAUVEGARDE
+!========================================
+end
+write memory
+
+!========================================
+! VERIFICATION
+!========================================
+! Commandes de verification:
+! show ip interface brief
+! show ip ospf neighbor
+! show ip route
+! show ip protocols
+! ping 41.16.1.1 (R1)
+! ping 41.16.1.14 (R3)
+! ping 41.16.1.18 (R4)
+! ping 41.16.1.29 (R-Internet)
+! ping 192.168.40.1 (RZ-2)
