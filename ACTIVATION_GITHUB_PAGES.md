@@ -2,14 +2,14 @@
 
 ## ✅ Votre code est déjà sur GitHub !
 
-Le dépôt est configuré : `https://github.com/HamaBytes/doc`
+Le dépôt est configuré : `https://github.com/HamaBytes/documentation_Pi_reseaux`
 
 ## 📋 Étapes pour Activer GitHub Pages
 
 ### Étape 1 : Aller sur votre dépôt GitHub
 
 1. Ouvrez votre navigateur
-2. Allez sur : **https://github.com/HamaBytes/doc**
+2. Allez sur : **https://github.com/HamaBytes/documentation_Pi_reseaux**
 3. Connectez-vous si nécessaire
 
 ### Étape 2 : Accéder aux Paramètres
@@ -39,7 +39,7 @@ Le dépôt est configuré : `https://github.com/HamaBytes/doc`
 
 Votre site sera disponible sur :
 ```
-https://hamabytes.github.io/doc/
+https://hamabytes.github.io/documentation_Pi_reseaux/
 ```
 
 ## 🔍 Vérification du Workflow
@@ -72,17 +72,17 @@ Si le workflow ne se déclenche pas automatiquement :
 **Solution** :
 - Vérifiez que le workflow s'est terminé avec succès (icône verte)
 - Attendez 1-2 minutes supplémentaires (propagation DNS)
-- Vérifiez l'URL : `https://hamabytes.github.io/doc/` (avec le `/` à la fin)
+- Vérifiez l'URL : `https://hamabytes.github.io/documentation_Pi_reseaux/` (avec le `/` à la fin)
 
 ## 📝 Checklist Rapide
 
-- [ ] Aller sur https://github.com/HamaBytes/doc
+- [ ] Aller sur https://github.com/HamaBytes/documentation_Pi_reseaux
 - [ ] Cliquer sur "Settings"
 - [ ] Aller dans "Pages"
 - [ ] Sélectionner "GitHub Actions" comme source
 - [ ] Aller dans "Actions" pour voir le workflow
 - [ ] Attendre que le workflow se termine (2-3 minutes)
-- [ ] Accéder à https://hamabytes.github.io/doc/
+- [ ] Accéder à https://hamabytes.github.io/documentation_Pi_reseaux/
 
 ## 🎉 C'est tout !
 

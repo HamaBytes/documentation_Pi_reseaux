@@ -8,14 +8,14 @@
     // Rediriger vers l'accueil
     var path = window.location.pathname;
     
-    // Si on est sur GitHub Pages avec le base path /doc/
-    if (path.startsWith('/doc')) {
-      // Si on est déjà sur /doc/, on charge index.html
-      if (path === '/doc/' || path === '/doc') {
-        window.location.replace('/doc/index.html');
+    // Si on est sur GitHub Pages avec le base path /documentation_Pi_reseaux/
+    if (path.startsWith('/documentation_Pi_reseaux')) {
+      // Si on est déjà sur /documentation_Pi_reseaux/, on charge index.html
+      if (path === '/documentation_Pi_reseaux/' || path === '/documentation_Pi_reseaux') {
+        window.location.replace('/documentation_Pi_reseaux/index.html');
       } else {
-        // Sinon rediriger vers /doc/
-        window.location.replace('/doc/');
+        // Sinon rediriger vers /documentation_Pi_reseaux/
+        window.location.replace('/documentation_Pi_reseaux/');
       }
     } else {
       // Environnement local
@@ -25,7 +25,7 @@
 </head>
 <body>
   <p>Redirection vers l'accueil...</p>
-  <p>Si la redirection ne fonctionne pas, <a href="/doc/">cliquez ici</a></p>
+  <p>Si la redirection ne fonctionne pas, <a href="/documentation_Pi_reseaux/">cliquez ici</a></p>
 </body>
 </html>
 

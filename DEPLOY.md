@@ -12,14 +12,14 @@ Ce guide vous explique comment déployer l'application sur GitHub Pages.
 
 ### 1. Dépôt GitHub
 
-✅ Le dépôt est déjà créé : **HamaBytes/doc**
+✅ Le dépôt est déjà créé : **HamaBytes/documentation_Pi_reseaux**
 
 ### 2. Configuration ✅
 
-**Le projet est déjà configuré** pour le dépôt `HamaBytes/doc` :
+**Le projet est déjà configuré** pour le dépôt `HamaBytes/documentation_Pi_reseaux` :
 
-- ✅ `vite.config.js` : base path = `/doc/`
-- ✅ `src/App.jsx` : basename = `/doc`
+- ✅ `vite.config.js` : base path = `/documentation_Pi_reseaux/`
+- ✅ `src/App.jsx` : basename = `/documentation_Pi_reseaux`
 
 Aucune modification nécessaire !
 
@@ -30,7 +30,7 @@ git init
 git add .
 git commit -m "Initial commit - Documentation TechSolutions"
 git branch -M main
-git remote add origin https://github.com/HamaBytes/doc.git
+git remote add origin https://github.com/HamaBytes/documentation_Pi_reseaux.git
 git push -u origin main
 ```
 
@@ -43,13 +43,18 @@ git push -u origin main
    - Source : "GitHub Actions"
 
 2. **Le workflow est déjà configuré** dans `.github/workflows/deploy.yml`
-   - Il se déclenche automatiquement à chaque push sur `main`
-   - Vous pouvez aussi le déclencher manuellement dans l'onglet "Actions"
+1.  **Activer GitHub Pages** :
+    - Allez dans Settings → Pages de votre dépôt
+    - Source : "GitHub Actions"
 
-3. **Vérifier le déploiement** :
-   - Allez dans l'onglet "Actions" de votre dépôt
-   - Attendez que le workflow se termine (environ 2-3 minutes)
-   - Votre site sera disponible sur : `https://hamabytes.github.io/doc/`
+2.  **Le workflow est déjà configuré** dans `.github/workflows/deploy.yml`
+    - Il se déclenche automatiquement à chaque push sur `main`
+    - Vous pouvez aussi le déclencher manuellement dans l'onglet "Actions"
+
+3.  **Vérifier le déploiement** :
+    - Allez dans l'onglet "Actions" de votre dépôt
+    - Attendez que le workflow se termine (environ 2-3 minutes)
+    - Votre site sera disponible sur : `https://hamabytes.github.io/documentation_Pi_reseaux/`
 
 ### Option 2 : Déploiement Manuel
 

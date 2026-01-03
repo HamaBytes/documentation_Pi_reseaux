@@ -30,7 +30,7 @@ function App() {
   }
 
   // Base path pour GitHub Pages (doit correspondre à Vite)
-  const basename = import.meta.env.PROD ? '/doc/' : '/'
+  const basename = import.meta.env.PROD ? '/documentation_Pi_reseaux/' : '/'
 
   // S'assurer qu'on charge l'accueil par défaut
   useEffect(() => {

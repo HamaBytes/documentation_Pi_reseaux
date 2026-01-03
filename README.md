@@ -2,9 +2,9 @@
 
 Site de documentation moderne et professionnel pour le projet d'infrastructure réseau TechSolutions SARL.
 
-🌐 **Version en ligne** : [Voir sur GitHub Pages](https://hamabytes.github.io/doc/)
+🌐 **Version en ligne** : [Voir sur GitHub Pages](https://hamabytes.github.io/documentation_Pi_reseaux/)
 
-> ✅ **Configuration** : Le projet est configuré pour le dépôt `HamaBytes/doc`
+> ✅ **Configuration** : Le projet est configuré pour le dépôt `HamaBytes/documentation_Pi_reseaux`
 
 ## 🚀 Fonctionnalités
 

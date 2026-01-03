@@ -12,10 +12,10 @@
 
 ### Étape 2 : Configuration ✅
 
-**Le projet est déjà configuré pour le dépôt `HamaBytes/doc`**
+**Le projet est déjà configuré pour le dépôt `HamaBytes/documentation_Pi_reseaux`**
 
-- ✅ `vite.config.js` : base path = `/doc/`
-- ✅ `src/App.jsx` : basename = `/doc`
+- ✅ `vite.config.js` : base path = `/documentation_Pi_reseaux/`
+- ✅ `src/App.jsx` : basename = `/documentation_Pi_reseaux`
 
 Aucune modification nécessaire !
 
@@ -37,7 +37,7 @@ git commit -m "Initial commit - Documentation TechSolutions"
 git branch -M main
 
 # Ajouter le remote GitHub
-git remote add origin https://github.com/HamaBytes/doc.git
+git remote add origin https://github.com/HamaBytes/documentation_Pi_reseaux.git
 
 # Pousser le code
 git push -u origin main
@@ -62,7 +62,7 @@ git push -u origin main
 
 Votre site sera disponible sur :
 ```
-https://hamabytes.github.io/doc/
+https://hamabytes.github.io/documentation_Pi_reseaux/
 ```
 
 ## 🔄 Mettre à jour le site
@@ -99,13 +99,13 @@ Le site se mettra à jour automatiquement en 2-3 minutes.
 
 ## 📝 Checklist de Déploiement
 
-- [x] Dépôt GitHub : `HamaBytes/doc` ✅
+- [x] Dépôt GitHub : `HamaBytes/documentation_Pi_reseaux` ✅
 - [x] Nom du dépôt configuré dans `vite.config.js` ✅
 - [x] Nom du dépôt configuré dans `src/App.jsx` ✅
 - [ ] Code poussé sur GitHub
 - [ ] GitHub Pages activé (Source: GitHub Actions)
 - [ ] Workflow terminé avec succès
-- [ ] Site accessible sur https://hamabytes.github.io/doc/
+- [ ] Site accessible sur https://hamabytes.github.io/documentation_Pi_reseaux/
 
 ## 🎉 C'est tout !
 
